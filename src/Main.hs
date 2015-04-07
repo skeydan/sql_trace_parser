@@ -1,8 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 
-import  Data.Attoparsec.ByteString.Char8
 import           Control.Applicative
+import           Data.Attoparsec.ByteString.Char8
 
 {-
 PARSING IN CURSOR #140611565469136 len=70 dep=0 uid=76 oct=3 lid=76 tim=1420815241318036 hv=1034183590 ad='659573c30' sqlid='cfpbyk4yu8sx6'
@@ -17,7 +17,6 @@ FETCH #140611565469136:c=0,e=130,p=0,cr=4,cu=0,mis=0,r=1,dep=0,og=1,plh=17192539
 STAT #140611565469136 id=1 cnt=1 pid=0 pos=1 obj=68951 op='TABLE ACCESS BY INDEX ROWID SESSION (cr=4 pr=0 pw=0 time=129 us cost=4 size=39 card=1)'
 STAT #140611565469136 id=2 cnt=1 pid=1 pos=1 obj=69455 op='INDEX RANGE SCAN SESSION_PK (cr=3 pr=0 pw=0 time=110 us cost=3 size=0 card=1)'
 WAIT #140611565469136: nam='SQL*Net message from client' ela= 1132 driver id=675562835 #bytes=1 p3=0 obj#=69200 tim=1420815241319726
-
 CLOSE #140611565469136:c=0,e=10,dep=0,type=0,tim=1420815241317768
 -}
 
@@ -28,7 +27,8 @@ main = do
   print $ parseOnly parseCall "FETCH #140611565469136:c=0,e=130,p=0,cr=4,cu=0,mis=0,r=1,dep=0,og=1,plh=1719253974,tim=1420815241318449"
   print $ parseOnly parseWait "WAIT #140611565469136: nam='SQL*Net message from client' ela= 1132 driver id=675562835 #bytes=1 p3=0 obj#=69200 tim=1420815241319726"
   print $ parseOnly parseClose "CLOSE #140611565469136:c=0,e=10,dep=0,type=0,tim=1420815241317768"
-  
+  print $ parseOnly parseStat "STAT #140611565469136 id=1 cnt=1 pid=0 pos=1 obj=68951 op='TABLE ACCESS BY INDEX ROWID SESSION (cr=4 pr=0 pw=0 time=129 us cost=4 size=39 card=1)'"
+
 parseCall :: Parser Call
 parseCall = Call <$> (parseCallType <*  string " #")
                  <*> (read <$> many1 digit <*  string ":c=")
@@ -43,11 +43,11 @@ parseCall = Call <$> (parseCallType <*  string " #")
                  <*> (parseOptGoal <*  string ",plh=")
                  <*> (read <$> many1 digit <*  string ",tim=")
                  <*> (read <$> many1 digit)
-                 
+
 parseWait :: Parser Wait
 parseWait = Wait <$> (string "WAIT #" *> (read <$> many1 digit) <* string ": nam='")
                  <*> (manyTill anyChar (char '\'') <*  string " ela= ")
-                 <*> (read <$> many1 digit <*  space)               
+                 <*> (read <$> many1 digit <*  space)
                  <*> (manyTill anyChar (char '='))
                  <*> (read <$> many1 digit <*  space)
                  <*> (manyTill anyChar (char '='))
@@ -60,7 +60,7 @@ parseWait = Wait <$> (string "WAIT #" *> (read <$> many1 digit) <* string ": nam
 --CLOSE #140611565469136:c=0,e=10,dep=0,type=0,tim=1420815241317768
 parseClose :: Parser Close
 parseClose =  Close <$> (string "CLOSE #" *> (read <$> many1 digit) <* string ":c=")
-                    <*> (read <$> many1 digit <*  string ",e=") 
+                    <*> (read <$> many1 digit <*  string ",e=")
                     <*> (read <$> many1 digit <*  string ",dep=")
                     <*> (read <$> many1 digit <*  string ",type=")
                     <*> (parseCloseType <*  string ",tim=")
@@ -90,6 +90,16 @@ parseCloseType = do
          '1' -> return SoftCloseEmptySlot
          '2' -> return SoftCloseReplaceOther
          '3' -> return SoftClosePutBack
+
+
+parseStat :: Parser Stat
+parseStat = Stat <$> (string "STAT #" *> (read <$> many1 digit) <* string " id=")
+                 <*> (read <$> many1 digit <*  string " cnt=")
+                 <*> (read <$> many1 digit <*  string " pid=")
+                 <*> (read <$> many1 digit <*  string " pos=")
+                 <*> (read <$> many1 digit <*  string " obj=")
+                 <*> (read <$> many1 digit <*  string " op='")
+                 <*> manyTill anyChar (char '\'')
 
 data Call = Call {
     callType      :: CallType,
@@ -152,3 +162,13 @@ data Close = Close {
 
 
 data CloseType = HardClose | SoftCloseEmptySlot | SoftCloseReplaceOther | SoftClosePutBack deriving (Show)
+
+data  Stat = Stat {
+    statCurNum :: Int,
+    id         :: Int,
+    cnt        :: Int,
+    pid        :: Int,
+    pos        :: Int,
+    statObj    :: Int,
+    op         :: String
+} deriving (Show)
