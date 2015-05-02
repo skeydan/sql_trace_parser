@@ -10,6 +10,5 @@ auto-hidden: []
 cabal-file: project.cabal
 version: 1
 extra-packages: ''
-ghc-args:
-- -Wall
+ghc-args: []
 excluded-modules: []
