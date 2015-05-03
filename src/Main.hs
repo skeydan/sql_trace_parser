@@ -15,13 +15,13 @@ main = do
     print $ parseOnly parseLines file
 
 parseLines :: Parser [Line]
-parseLines = many parseLine
+parseLines = many $ parseLine <* endOfLine
 
 parseLine :: Parser Line
-parseLine =  parseCall  <|> parseWait <|> parseClose <|> parseStat
+parseLine =  parseCursor <|> parseCall  <|> parseWait <|> parseClose <|> parseStat
 
 parseCursor :: Parser Line
-parseCursor = Cursor <$> (string "PARSING IN CURSOR #" *> (read <$> many1 digit) <* string ": len='")
+parseCursor = Cursor <$> (string "PARSING IN CURSOR #" *> (read <$> many1 digit) <* string " len=")
                      <*> (read <$> many1 digit <*  string " dep=")
                      <*> (read <$> many1 digit <*  string " uid=")
                      <*> (read <$> many1 digit <*  string " oct=")
@@ -29,9 +29,9 @@ parseCursor = Cursor <$> (string "PARSING IN CURSOR #" *> (read <$> many1 digit)
                      <*> (read <$> many1 digit <*  string " tim=")
                      <*> (read <$> many1 digit <*  string " hv=")
                      <*> (read <$> many1 digit <*  string " ad='")
-                     <*> (manyTill anyChar (char '\'') <*  string " sqlid='' ")
-                     <*> manyTill anyChar (char '\'') 
-                     <*> manyTill anyChar (string "END OF STMT")
+                     <*> (manyTill (digit <|> letter_ascii) (char '\'') <*  string " sqlid='")
+                     <*> manyTill (digit <|> letter_ascii) (string "\'\n") 
+                     <*> manyTill anyChar (string "\nEND OF STMT")
 
 
 parseCall :: Parser Line
