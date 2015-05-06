@@ -6,14 +6,22 @@ module Main where
 import           Control.Applicative
 import           Data.Attoparsec.ByteString.Char8
 import qualified Data.ByteString as B
+import qualified Data.List as L
 
 tracefile = "example.trc"
 
 main :: IO ()
 main = do
     file <- B.readFile tracefile
-    print $ parseOnly parseLines file
+    let parsed = parseOnly parseLines file
+    case parsed of
+        Left str -> putStrLn "couldn't parse file"
+        Right a -> doTkprof a
 
+doTkprof :: [Line] -> IO ()
+doTkprof lns = undefined
+    
+                  
 parseLines :: Parser [Line]
 parseLines = many $ parseLine <* endOfLine
 
