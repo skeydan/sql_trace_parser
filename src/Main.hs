@@ -5,8 +5,8 @@ module Main where
 
 import           Control.Applicative
 import           Data.Attoparsec.ByteString.Char8
-import qualified Data.ByteString as B
-import qualified Data.List as L
+import qualified Data.ByteString                  as B
+import qualified Data.Map                         as M
 
 tracefile = "example.trc"
 
@@ -16,12 +16,35 @@ main = do
     let parsed = parseOnly parseLines file
     case parsed of
         Left str -> putStrLn "couldn't parse file"
-        Right a -> doTkprof a
+        --Right a -> bySqlId a
+        _ -> print ""
+        
 
-doTkprof :: [Line] -> IO ()
-doTkprof lns = undefined
-    
-                  
+bySqlId :: [Line] -> IO ()
+bySqlId lns = do
+  let startState = StateHolder "" "" M.empty
+      {-
+  let sqlIdsMap = foldr
+                    (\l s -> StateHolder
+                                {lastSqlId = sqlId l,
+                                lastCurNum = curNum l,
+                                M.insertWith (++) (sqlId l) l (mapAccum s)
+                                }
+                    )
+                    startState
+                    lns
+ -}
+  print startState
+
+
+type SqlId = String
+type CurNum = String
+data StateHolder = StateHolder {
+  lastSqlId  :: SqlId,
+  lastCurNum :: CurNum,
+  mapAccum   :: M.Map SqlId [Line]
+  } deriving (Show)
+
 parseLines :: Parser [Line]
 parseLines = many $ parseLine <* endOfLine
 
@@ -38,7 +61,7 @@ parseCursor = Cursor <$> (string "PARSING IN CURSOR #" *> (read <$> many1 digit)
                      <*> (read <$> many1 digit <*  string " hv=")
                      <*> (read <$> many1 digit <*  string " ad='")
                      <*> (manyTill (digit <|> letter_ascii) (char '\'') <*  string " sqlid='")
-                     <*> manyTill (digit <|> letter_ascii) (string "\'\n") 
+                     <*> manyTill (digit <|> letter_ascii) (string "\'\n")
                      <*> manyTill anyChar (string "\nEND OF STMT")
 
 

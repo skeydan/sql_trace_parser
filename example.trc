@@ -11,3 +11,4 @@ STAT #140611565469136 id=1 cnt=1 pid=0 pos=1 obj=68951 op='TABLE ACCESS BY INDEX
 STAT #140611565469136 id=2 cnt=1 pid=1 pos=1 obj=69455 op='INDEX RANGE SCAN SESSION_PK (cr=3 pr=0 pw=0 time=110 us cost=3 size=0 card=1)'
 WAIT #140611565469136: nam='SQL*Net message from client' ela= 1132 driver id=675562835 #bytes=1 p3=0 obj#=69200 tim=1420815241319726
 CLOSE #140611565469136:c=0,e=10,dep=0,type=0,tim=1420815241317768
+
