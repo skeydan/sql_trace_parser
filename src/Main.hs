@@ -22,7 +22,16 @@ main = do
 bySqlId :: [Line] -> IO ()
 bySqlId lns = do
   let startState = StateHolder "" 0 M.empty
-  let sqlIdsMap = foldr (\l s -> let findSqlId x y = undefined in
+  let sqlIdsMap = foldr (\l s -> let findSqlId l' s' = 
+                                       case l' of
+                                         Cursor {sqlId = n} -> M.insert n [l'] (mapAccum s')
+                                         _ -> M.insertWith 
+                                              (++) 
+                                              (if (lastCurNum s') == (curNum l') then lastSqlId s'
+                                              else undefined)
+                                              [l']
+                                              (mapAccum s')
+                                   in
                                    StateHolder
                                    {lastSqlId = sqlId l,
                                    lastCurNum = curNum l,
@@ -30,7 +39,7 @@ bySqlId lns = do
                          )
                          startState
                          lns
-  print startState
+  print sqlIdsMap
 
 curNum :: Line -> CurNum
 curNum Call {callCurNum = n} = n
@@ -172,7 +181,7 @@ data Line =
         hash_value      :: Int,
         address         :: String,
         sqlId           :: String,
-        sql_text        :: String
+        sqlText        :: String
     } |
     Wait {
         waitCurNum  :: Int,
