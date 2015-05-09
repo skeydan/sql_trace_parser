@@ -16,29 +16,32 @@ main = do
     let parsed = parseOnly parseLines file
     case parsed of
         Left str -> putStrLn "couldn't parse file"
-        --Right a -> bySqlId a
-        _ -> print ""
-        
+        Right a -> bySqlId a
+
 
 bySqlId :: [Line] -> IO ()
 bySqlId lns = do
-  let startState = StateHolder "" "" M.empty
-      {-
-  let sqlIdsMap = foldr
-                    (\l s -> StateHolder
-                                {lastSqlId = sqlId l,
-                                lastCurNum = curNum l,
-                                M.insertWith (++) (sqlId l) l (mapAccum s)
-                                }
-                    )
-                    startState
-                    lns
- -}
+  let startState = StateHolder "" 0 M.empty
+  let sqlIdsMap = foldr (\l s -> let findSqlId x y = undefined in
+                                   StateHolder
+                                   {lastSqlId = sqlId l,
+                                   lastCurNum = curNum l,
+                                   mapAccum  = findSqlId l s}
+                         )
+                         startState
+                         lns
   print startState
 
+curNum :: Line -> CurNum
+curNum Call {callCurNum = n} = n
+curNum Cursor {crsrCurNum = n} = n
+curNum Wait {waitCurNum = n} = n
+curNum Stat {statCurNum = n} = n
+curNum Close {closeCurNum = n} = n
 
+-- --M.insertWith (++) (sqlId l) l (mapAccum s)
 type SqlId = String
-type CurNum = String
+type CurNum = Int
 data StateHolder = StateHolder {
   lastSqlId  :: SqlId,
   lastCurNum :: CurNum,
