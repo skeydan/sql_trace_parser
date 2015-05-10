@@ -28,12 +28,14 @@ bySqlId lns = do
                                          _ -> M.insertWith 
                                               (++) 
                                               (if (lastCurNum s') == (curNum l') then lastSqlId s'
-                                              else undefined)
+                                              else error $ show l ++ "  " ++ show (lastCurNum s') ++ "  " ++ show (curNum l') )
                                               [l']
                                               (mapAccum s')
                                    in
                                    StateHolder
-                                   {lastSqlId = sqlId l,
+                                   {lastSqlId = case l of
+                                                  Cursor {sqlId = n} -> n
+                                                  _ -> lastSqlId s,
                                    lastCurNum = curNum l,
                                    mapAccum  = findSqlId l s}
                          )
