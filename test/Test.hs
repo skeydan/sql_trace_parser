@@ -3,12 +3,14 @@
 module Test where
 
 import           Data.Attoparsec.ByteString.Char8
+import qualified Data.Map                         as M
 import Main
 
 main :: IO ()
 main = do
-  print $ parseOnly parseCursor "PARSING IN CURSOR #140611565469136 len=70 dep=0 uid=76 oct=3 lid=76 tim=1420815241318036 hv=1034183590 ad='659573c30' sqlid='cfpbyk4yu8sx6'\nselect * from SESSION\nwhere KEY like :1\nEND OF STMT"
+  print testFold
   {-
+  print $ parseOnly parseCursor "PARSING IN CURSOR #140611565469136 len=70 dep=0 uid=76 oct=3 lid=76 tim=1420815241318036 hv=1034183590 ad='659573c30' sqlid='cfpbyk4yu8sx6'\nselect * from SESSION\nwhere KEY like :1\nEND OF STMT"
   print $ parseOnly parseCall "PARSE #140611565469136:c=1000
   print $ parseOnly parseCall "PARSE #140611565469136:c=1000,e=198,p=0,cr=0,cu=0,mis=0,r=0,dep=0,og=1,plh=1719253974,tim=1420815241318034"
   print $ parseOnly parseCall "EXEC #140611565469136:c=0,e=48,p=0,cr=0,cu=0,mis=0,r=0,dep=0,og=1,plh=1719253974,tim=1420815241318199"
@@ -18,3 +20,8 @@ main = do
   print $ parseOnly parseStat "STAT #140611565469136 id=1 cnt=1 pid=0 pos=1 obj=68951 op='TABLE ACCESS BY INDEX ROWID SESSION (cr=4 pr=0 pw=0 time=129 us cost=4 size=39 card=1)'"
   print $ parseOnly parseLine "PARSE #140611565469136:c=1000,e=198,p=0,cr=0,cu=0,mis=0,r=0,dep=0,og=1,plh=1719253974,tim=1420815241318034"
   -}
+
+--testFold = foldr (\x y -> M.insert x x y) M.empty [1, 2, 3]  
+testFold = foldr (\x y -> TS {a = (a y) + x, b = (b y) ++ "si"}) (TS 1 "nope") [1,2,3]
+data TestS = TS {a :: Int, b :: String} deriving (Show)
+

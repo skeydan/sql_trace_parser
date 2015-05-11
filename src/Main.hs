@@ -18,27 +18,24 @@ main = do
         Left str -> putStrLn "couldn't parse file"
         Right a -> bySqlId a
 
+matchCursors :: Line -> StateHolder -> M.Map SqlId [Line]
+matchCursors l s = case l of
+    Cursor {sqlId = id} -> M.insert id [l] (mapAccum s)
+    _ -> M.insertWith (++) 
+                      (if (lastCurNum s) == (curNum l) then lastSqlId s
+                       else error $ show (lastSqlId s) ++ "  " ++ show (lastCurNum s) ++ "  " ++ show (mapAccum s) )
+                       [l]
+                       (mapAccum s)
+
 
 bySqlId :: [Line] -> IO ()
 bySqlId lns = do
   let startState = StateHolder "" 0 M.empty
-  let sqlIdsMap = foldr (\l s -> let findSqlId l' s' = 
-                                       case l' of
-                                         Cursor {sqlId = n} -> M.insert n [l'] (mapAccum s')
-                                         _ -> M.insertWith 
-                                              (++) 
-                                              (if (lastCurNum s') == (curNum l') then lastSqlId s'
-                                              else error $ show l ++ "  " ++ show (lastCurNum s') ++ "  " ++ show (curNum l') )
-                                              [l']
-                                              (mapAccum s')
-                                   in
-                                   StateHolder
-                                   {lastSqlId = case l of
-                                                  Cursor {sqlId = n} -> n
-                                                  _ -> lastSqlId s,
-                                   lastCurNum = curNum l,
-                                   mapAccum  = findSqlId l s}
-                         )
+  let sqlIdsMap = foldr (\l s -> StateHolder {lastSqlId = case l of
+                                                Cursor {sqlId = id} -> id
+                                                _ -> lastSqlId s,
+                                              lastCurNum = curNum l,
+                                              mapAccum  = matchCursors l s})
                          startState
                          lns
   print sqlIdsMap
