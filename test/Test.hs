@@ -22,6 +22,6 @@ main = do
   -}
 
 --testFold = foldr (\x y -> M.insert x x y) M.empty [1, 2, 3]  
-testFold = foldr (\x y -> TS {a = (a y) + x, b = (b y) ++ "si"}) (TS 1 "nope") [1,2,3]
+testFold = foldl (\y x -> TS {a = (a y) + x, b = (b y) ++ show x}) (TS 1 "nope") [1,2,3]
 data TestS = TS {a :: Int, b :: String} deriving (Show)
 

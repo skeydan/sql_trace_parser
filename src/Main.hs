@@ -16,8 +16,9 @@ main = do
     let parsed = parseOnly parseLines file
     case parsed of
         Left str -> putStrLn "couldn't parse file"
-        Right a -> bySqlId a
+        Right a -> print $ groupBySqlId a
 
+{-
 matchCursors :: Line -> StateHolder -> M.Map SqlId [Line]
 matchCursors l s = case l of
     Cursor {sqlId = id} -> M.insert id [l] (mapAccum s)
@@ -26,19 +27,14 @@ matchCursors l s = case l of
                        else error $ show (lastSqlId s) ++ "  " ++ show (lastCurNum s) ++ "  " ++ show (mapAccum s) )
                        [l]
                        (mapAccum s)
+-}
 
-
-bySqlId :: [Line] -> IO ()
-bySqlId lns = do
-  let startState = StateHolder "" 0 M.empty
-  let sqlIdsMap = foldr (\l s -> StateHolder {lastSqlId = case l of
-                                                Cursor {sqlId = id} -> id
-                                                _ -> lastSqlId s,
-                                              lastCurNum = curNum l,
-                                              mapAccum  = matchCursors l s})
-                         startState
-                         lns
-  print sqlIdsMap
+groupBySqlId :: [Line] -> CMaps
+groupBySqlId lns = do
+  let empty = CMaps M.empty M.empty in
+    foldl (\m l -> CMaps {sqlIdsMap = M.empty, cursorsMap = M.empty}) --TBD
+          empty  
+          lns
 
 curNum :: Line -> CurNum
 curNum Call {callCurNum = n} = n
@@ -47,13 +43,12 @@ curNum Wait {waitCurNum = n} = n
 curNum Stat {statCurNum = n} = n
 curNum Close {closeCurNum = n} = n
 
--- --M.insertWith (++) (sqlId l) l (mapAccum s)
 type SqlId = String
 type CurNum = Int
-data StateHolder = StateHolder {
-  lastSqlId  :: SqlId,
-  lastCurNum :: CurNum,
-  mapAccum   :: M.Map SqlId [Line]
+
+data CMaps = CMaps {
+  sqlIdsMap  :: M.Map SqlId [Line],
+  cursorsMap :: M.Map CurNum [Line]
   } deriving (Show)
 
 parseLines :: Parser [Line]
