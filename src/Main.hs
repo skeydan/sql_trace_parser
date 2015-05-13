@@ -18,22 +18,17 @@ main = do
         Left str -> putStrLn "couldn't parse file"
         Right a -> print $ groupBySqlId a
 
-{-
-matchCursors :: Line -> StateHolder -> M.Map SqlId [Line]
-matchCursors l s = case l of
-    Cursor {sqlId = id} -> M.insert id [l] (mapAccum s)
-    _ -> M.insertWith (++) 
-                      (if (lastCurNum s) == (curNum l) then lastSqlId s
-                       else error $ show (lastSqlId s) ++ "  " ++ show (lastCurNum s) ++ "  " ++ show (mapAccum s) )
-                       [l]
-                       (mapAccum s)
--}
 
 groupBySqlId :: [Line] -> CMaps
 groupBySqlId lns = do
-  let empty = CMaps M.empty M.empty in
-    foldl (\m l -> CMaps {sqlIdsMap = M.empty, cursorsMap = M.empty}) --TBD
-          empty  
+  let start = CMaps M.empty M.empty in
+    foldl (\m l -> case l of
+                    Cursor {sqlId = id, crsrCurNum = n} -> CMaps { sqlIdsMap = M.insertWith (++) id [l] (sqlIdsMap m),
+                                                                   cursorsMap = M.insertWith (++) n [l] (cursorsMap m) }
+                    _ -> let mySqlId = M.findWithDefault "tbd" (curNum l) (cursorsMap m) in
+                           CMaps { sqlIdsMap = M.insertWith (++)  mySqlId [l] (sqlIdsMap m),
+                                   cursorsMap = M.insertWith (++) (curNum l) [l] (cursorsMap m) })
+          start  
           lns
 
 curNum :: Line -> CurNum
