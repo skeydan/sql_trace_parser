@@ -25,11 +25,15 @@ groupBySqlId lns = do
     foldl (\m l -> case l of
                     Cursor {sqlId = id, crsrCurNum = n} -> CMaps { sqlIdsMap = M.insertWith (++) id [l] (sqlIdsMap m),
                                                                    cursorsMap = M.insertWith (++) n [l] (cursorsMap m) }
-                    _ -> let mySqlId = M.findWithDefault "tbd" (curNum l) (cursorsMap m) in
+                    _ -> let mySqlId = sqlId (last (filter isCursor (M.findWithDefault undefined (curNum l) (cursorsMap m)))) in
                            CMaps { sqlIdsMap = M.insertWith (++)  mySqlId [l] (sqlIdsMap m),
                                    cursorsMap = M.insertWith (++) (curNum l) [l] (cursorsMap m) })
           start  
           lns
+          
+isCursor :: Line -> Bool
+isCursor (Cursor _ _ _ _ _ _ _ _ _ _ _) = True
+isCursor _ = False
 
 curNum :: Line -> CurNum
 curNum Call {callCurNum = n} = n

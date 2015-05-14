@@ -8,7 +8,7 @@ import Main
 
 main :: IO ()
 main = do
-  print testFold
+  print testFind
   {-
   print $ parseOnly parseCursor "PARSING IN CURSOR #140611565469136 len=70 dep=0 uid=76 oct=3 lid=76 tim=1420815241318036 hv=1034183590 ad='659573c30' sqlid='cfpbyk4yu8sx6'\nselect * from SESSION\nwhere KEY like :1\nEND OF STMT"
   print $ parseOnly parseCall "PARSE #140611565469136:c=1000
@@ -25,3 +25,4 @@ main = do
 testFold = foldl (\y x -> TS {a = (a y) + x, b = (b y) ++ show x}) (TS 1 "nope") [1,2,3]
 data TestS = TS {a :: Int, b :: String} deriving (Show)
 
+testFind = M.findWithDefault [4, 4] "w" $ M.fromList [("w",[1, 2 , 3]), ("x", [2, 3, 4] )]

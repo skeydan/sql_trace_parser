@@ -4,3 +4,7 @@ PARSING IN CURSOR #140611565469136 len=70 dep=0 uid=76 oct=3 lid=76 tim=14208152
 
 END OF STMT
 PARSE #140611565469136:c=1000,e=198,p=0,cr=0,cu=0,mis=0,r=0,dep=0,og=1,plh=1719253974,tim=1420815241318034
+PARSING IN CURSOR #140611565469136 len=0 dep=0 uid=0 oct=0 lid=0 tim=0 hv=0 ad='0' sqlid='000000000000000'
+select * from dual
+END OF STMT
+PARSE #140611565469136:c=0,e=0,p=0,cr=0,cu=0,mis=0,r=0,dep=0,og=0,plh=0,tim=0
