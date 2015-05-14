@@ -17,7 +17,7 @@ main = do
     case parsed of
         Left str -> putStrLn "couldn't parse file"
         Right a -> print $ groupBySqlId a
-
+        --Right a -> print a
 
 groupBySqlId :: [Line] -> CMaps
 groupBySqlId lns = do
@@ -25,7 +25,7 @@ groupBySqlId lns = do
     foldl (\m l -> case l of
                     Cursor {sqlId = id, crsrCurNum = n} -> CMaps { sqlIdsMap = M.insertWith (++) id [l] (sqlIdsMap m),
                                                                    cursorsMap = M.insertWith (++) n [l] (cursorsMap m) }
-                    _ -> let mySqlId = sqlId (last (filter isCursor (M.findWithDefault undefined (curNum l) (cursorsMap m)))) in
+                    _ -> let mySqlId = sqlId (head (filter isCursor (M.findWithDefault undefined (curNum l) (cursorsMap m)))) in
                            CMaps { sqlIdsMap = M.insertWith (++)  mySqlId [l] (sqlIdsMap m),
                                    cursorsMap = M.insertWith (++) (curNum l) [l] (cursorsMap m) })
           start  
@@ -51,7 +51,7 @@ data CMaps = CMaps {
   } deriving (Show)
 
 parseLines :: Parser [Line]
-parseLines = many $ parseLine <* endOfLine
+parseLines = many $ parseLine <* endOfLine 
 
 parseLine :: Parser Line
 parseLine =  parseCursor <|> parseCall  <|> parseWait <|> parseClose <|> parseStat
