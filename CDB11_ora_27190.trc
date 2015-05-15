@@ -1,0 +1,262 @@
+Trace file /u00/app/oracle/diag/rdbms/cdb1/CDB11/trace/CDB11_ora_27190.trc
+Oracle Database 12c Enterprise Edition Release 12.1.0.2.0 - 64bit Production
+With the Partitioning, Real Application Clusters, Automatic Storage Management, OLAP,
+Advanced Analytics and Real Application Testing options
+ORACLE_HOME = /u00/app/oracle/product/12.1.0.2/db_1
+System name:	Linux
+Node name:	node5.keynodes.com
+Release:	3.8.13-68.1.3.el7uek.x86_64
+Version:	#2 SMP Wed Apr 22 11:51:54 PDT 2015
+Machine:	x86_64
+Instance name: CDB11
+Redo thread mounted by this instance: 1
+Oracle process number: 58
+Unix process pid: 27190, image: oracle@node5.keynodes.com (TNS V1-V3)
+
+
+*** 2015-05-15 10:56:04.039
+*** SESSION ID:(46.37457) 2015-05-15 10:56:04.039
+*** CLIENT ID:() 2015-05-15 10:56:04.039
+*** SERVICE NAME:(pdb1) 2015-05-15 10:56:04.039
+*** MODULE NAME:(sqlplus@node5.keynodes.com (TNS V1-V3)) 2015-05-15 10:56:04.039
+*** CLIENT DRIVER:(SQL*PLUS) 2015-05-15 10:56:04.039
+*** ACTION NAME:() 2015-05-15 10:56:04.039
+*** CONTAINER ID:(3) 2015-05-15 10:56:04.039
+ 
+=====================
+PARSING IN CURSOR #139644005886096 len=47 dep=0 uid=0 oct=47 lid=0 tim=2878189943 hv=774405238 ad='95cd0278' sqlid='grh681wr2hz3q'
+BEGIN dbms_monitor.session_trace_enable; END;
+END OF STMT
+EXEC #139644005886096:c=16000,e=54477,p=4,cr=75,cu=0,mis=1,r=1,dep=0,og=1,plh=0,tim=2878189939
+WAIT #139644005886096: nam='SQL*Net message to client' ela= 2 driver id=1650815232 #bytes=1 p3=0 obj#=47 tim=2878191922
+
+*** 2015-05-15 10:56:10.182
+WAIT #139644005886096: nam='SQL*Net message from client' ela= 6143374 driver id=1650815232 #bytes=1 p3=0 obj#=47 tim=2884335318
+CLOSE #139644005886096:c=0,e=78,dep=0,type=0,tim=2884335600
+WAIT #139644005886096: nam='db file sequential read' ela= 10191 file#=11 block#=154 blocks=1 obj#=92479 tim=2884348516
+WAIT #139644005886096: nam='db file sequential read' ela= 1193 file#=11 block#=146 blocks=1 obj#=92478 tim=2884351829
+=====================
+PARSING IN CURSOR #139643919960920 len=97 dep=2 uid=0 oct=3 lid=0 tim=2884360370 hv=791757000 ad='95a3cb10' sqlid='87gaftwrm2h68'
+select o.owner#,o.name,o.namespace,o.remoteowner,o.linkname,o.subname from obj$ o where o.obj#=:1
+END OF STMT
+EXEC #139643919960920:c=1000,e=117,p=0,cr=0,cu=0,mis=0,r=0,dep=2,og=4,plh=1072382624,tim=2884360369
+FETCH #139643919960920:c=0,e=25,p=0,cr=2,cu=0,mis=0,r=0,dep=2,og=4,plh=1072382624,tim=2884360496
+CLOSE #139643919960920:c=0,e=3,dep=2,type=3,tim=2884360545
+=====================
+PARSING IN CURSOR #139643919241752 len=334 dep=1 uid=0 oct=3 lid=0 tim=2884360661 hv=3617071139 ad='92f3b0e8' sqlid='7bb13fmbth813'
+SELECT /* OPT_DYN_SAMP */ /*+ ALL_ROWS IGNORE_WHERE_CLAUSE NO_PARALLEL(SAMPLESUB) opt_param('parallel_execution_enabled', 'false') NO_PARALLEL_INDEX(SAMPLESUB) NO_SQL_TUNE */ NVL(SUM(C1),0), NVL(SUM(C2),0) FROM (SELECT /*+ NO_PARALLEL("EMP") FULL("EMP") NO_PARALLEL_INDEX("EMP") */ 1 AS C1, 1 AS C2 FROM "SCOTT"."EMP" "EMP") SAMPLESUB
+END OF STMT
+PARSE #139643919241752:c=4000,e=8707,p=0,cr=2,cu=0,mis=1,r=0,dep=1,og=1,plh=2083865914,tim=2884360661
+EXEC #139643919241752:c=0,e=42,p=0,cr=0,cu=0,mis=0,r=0,dep=1,og=1,plh=2083865914,tim=2884360749
+WAIT #139643919241752: nam='db file scattered read' ela= 917 file#=11 block#=147 blocks=5 obj#=92478 tim=2884361863
+FETCH #139643919241752:c=1000,e=1341,p=5,cr=7,cu=0,mis=0,r=1,dep=1,og=1,plh=2083865914,tim=2884362107
+STAT #139643919241752 id=1 cnt=1 pid=0 pos=1 obj=0 op='SORT AGGREGATE (cr=7 pr=5 pw=0 time=1341 us)'
+STAT #139643919241752 id=2 cnt=14 pid=1 pos=1 obj=92478 op='TABLE ACCESS FULL EMP (cr=7 pr=5 pw=0 time=1315 us cost=3 size=0 card=409)'
+CLOSE #139643919241752:c=0,e=8,dep=1,type=0,tim=2884362290
+=====================
+PARSING IN CURSOR #139644005886096 len=23 dep=0 uid=0 oct=3 lid=0 tim=2884363126 hv=52404428 ad='921f06c0' sqlid='ggqns3c1jz86c'
+select * from scott.emp
+END OF STMT
+PARSE #139644005886096:c=9000,e=27382,p=7,cr=11,cu=0,mis=1,r=0,dep=0,og=1,plh=3956160932,tim=2884363125
+WAIT #139644005886096: nam='Disk file operations I/O' ela= 27 FileOperation=8 fileno=0 filetype=8 obj#=92478 tim=2884363237
+EXEC #139644005886096:c=0,e=29,p=0,cr=0,cu=0,mis=0,r=0,dep=0,og=1,plh=3956160932,tim=2884363307
+WAIT #139644005886096: nam='SQL*Net message to client' ela= 2 driver id=1650815232 #bytes=1 p3=0 obj#=92478 tim=2884363365
+FETCH #139644005886096:c=0,e=76,p=0,cr=4,cu=0,mis=0,r=1,dep=0,og=1,plh=3956160932,tim=2884363472
+WAIT #139644005886096: nam='SQL*Net message from client' ela= 252 driver id=1650815232 #bytes=1 p3=0 obj#=92478 tim=2884363780
+WAIT #139644005886096: nam='SQL*Net message to client' ela= 2 driver id=1650815232 #bytes=1 p3=0 obj#=92478 tim=2884363832
+FETCH #139644005886096:c=0,e=52,p=0,cr=4,cu=0,mis=0,r=13,dep=0,og=1,plh=3956160932,tim=2884363869
+STAT #139644005886096 id=1 cnt=14 pid=0 pos=1 obj=92478 op='TABLE ACCESS FULL EMP (cr=8 pr=0 pw=0 time=69 us cost=3 size=1218 card=14)'
+
+*** 2015-05-15 10:56:27.099
+WAIT #139644005886096: nam='SQL*Net message from client' ela= 16887974 driver id=1650815232 #bytes=1 p3=0 obj#=92478 tim=2901251903
+CLOSE #139644005886096:c=0,e=20,dep=0,type=0,tim=2901252121
+WAIT #139644005886096: nam='library cache lock' ela= 990 handle address=2509875608 lock address=2482993832 100*mode+namespace=65538 obj#=92478 tim=2901254272
+WAIT #139644005886096: nam='row cache lock' ela= 259 cache id=8 mode=0 request=3 obj#=92478 tim=2901254663
+=====================
+PARSING IN CURSOR #139643919992368 len=245 dep=1 uid=0 oct=3 lid=0 tim=2901259326 hv=1602468406 ad='95a62368' sqlid='1p5grz1gs7fjq'
+select obj#,type#,ctime,mtime,stime, status, dataobj#, flags, oid$, spare1, spare2, spare3, signature, spare7, spare8, spare9 from obj$ where owner#=:1 and name=:2 and namespace=:3 and remoteowner is null and linkname is null and subname is null
+END OF STMT
+EXEC #139643919992368:c=4000,e=4496,p=0,cr=0,cu=0,mis=1,r=0,dep=1,og=4,plh=813480514,tim=2901259321
+WAIT #139643919992368: nam='gc current block 2-way' ela= 812 p1=9 p2=30107 p3=1 obj#=37 tim=2901260574
+FETCH #139643919992368:c=0,e=1219,p=0,cr=4,cu=0,mis=0,r=1,dep=1,og=4,plh=813480514,tim=2901260715
+STAT #139643919992368 id=1 cnt=1 pid=0 pos=1 obj=18 op='TABLE ACCESS BY INDEX ROWID BATCHED OBJ$ (cr=4 pr=0 pw=0 time=1219 us cost=4 size=103 card=1)'
+STAT #139643919992368 id=2 cnt=1 pid=1 pos=1 obj=37 op='INDEX RANGE SCAN I_OBJ2 (cr=3 pr=0 pw=0 time=1197 us cost=3 size=0 card=1)'
+CLOSE #139643919992368:c=0,e=93,dep=1,type=3,tim=2901260882
+WAIT #139644005886096: nam='library cache pin' ela= 772 handle address=2509875608 pin address=2479378048 100*mode+namespace=397202870566914 obj#=92478 tim=2901261904
+=====================
+PARSING IN CURSOR #139644005797984 len=484 dep=1 uid=0 oct=3 lid=0 tim=2901262181 hv=3039452944 ad='959eb710' sqlid='7fwum1yuknrsh'
+select t.ts#,t.file#,t.block#,nvl(t.bobj#,0),nvl(t.tab#,0),t.intcols,nvl(t.clucols,0),t.flags,t.pctfree$,t.pctused$,t.initrans,t.maxtrans,t.rowcnt,t.blkcnt,t.empcnt,t.avgspc,t.chncnt,t.avgrln,t.analyzetime,t.samplesize,t.cols,t.property,nvl(t.degree,1),nvl(t.instances,1),t.avgspc_flb,t.flbcnt,t.kernelcols,nvl(t.trigflag, 0),nvl(t.spare1,0),nvl(t.spare2,0),t.spare4,t.spare6,ts.cachedblk,ts.cachehit,ts.logicalread from tab$ t, tab_stats$ ts where t.obj#= :1 and t.obj# = ts.obj# (+)
+END OF STMT
+EXEC #139644005797984:c=0,e=54,p=0,cr=0,cu=0,mis=0,r=0,dep=1,og=4,plh=2035254952,tim=2901262180
+WAIT #139644005797984: nam='gc current block 2-way' ela= 374 p1=9 p2=23740 p3=1 obj#=3 tim=2901262757
+WAIT #139644005797984: nam='db file sequential read' ela= 18942 file#=9 block#=30448 blocks=1 obj#=4 tim=2901281866
+FETCH #139644005797984:c=0,e=19758,p=1,cr=4,cu=0,mis=0,r=1,dep=1,og=4,plh=2035254952,tim=2901282024
+CLOSE #139644005797984:c=0,e=10,dep=1,type=3,tim=2901282084
+WAIT #139644005886096: nam='row cache lock' ela= 780 cache id=2 mode=0 request=3 obj#=92478 tim=2901282939
+=====================
+PARSING IN CURSOR #139643920110984 len=226 dep=1 uid=0 oct=3 lid=0 tim=2901283067 hv=1011610568 ad='95a4d8e0' sqlid='9tgj4g8y4rwy8'
+select type#,blocks,extents,minexts,maxexts,extsize,extpct,user#,iniexts,NVL(lists,65535),NVL(groups,65535),cachehint,hwmincr, NVL(spare1,0),NVL(scanhint,0),NVL(bitmapranges,0) from seg$ where ts#=:1 and file#=:2 and block#=:3
+END OF STMT
+EXEC #139643920110984:c=0,e=66,p=0,cr=0,cu=0,mis=0,r=0,dep=1,og=4,plh=3755742892,tim=2901283066
+FETCH #139643920110984:c=0,e=27,p=0,cr=3,cu=0,mis=0,r=1,dep=1,og=4,plh=3755742892,tim=2901283161
+CLOSE #139643920110984:c=0,e=6,dep=1,type=3,tim=2901283193
+WAIT #139644005886096: nam='db file sequential read' ela= 5351 file#=11 block#=162 blocks=1 obj#=92481 tim=2901288649
+=====================
+PARSING IN CURSOR #139644005898520 len=39 dep=1 uid=0 oct=3 lid=0 tim=2901288840 hv=2576572266 ad='95a59b68' sqlid='gd28w82ct6rva'
+select audit$ from tab$ where obj# = :1
+END OF STMT
+EXEC #139644005898520:c=0,e=69,p=0,cr=0,cu=0,mis=0,r=0,dep=1,og=4,plh=2970138452,tim=2901288838
+FETCH #139644005898520:c=0,e=30,p=0,cr=3,cu=0,mis=0,r=1,dep=1,og=4,plh=2970138452,tim=2901288998
+CLOSE #139644005898520:c=0,e=10,dep=1,type=3,tim=2901289065
+=====================
+PARSING IN CURSOR #139644005891208 len=865 dep=2 uid=0 oct=3 lid=0 tim=2901289623 hv=715221786 ad='959c7070' sqlid='616m6uhpa2usu'
+select i.obj#,i.ts#,i.file#,i.block#,i.intcols,i.type#,i.flags,i.property,i.pctfree$,i.initrans,i.maxtrans,i.blevel,i.leafcnt,i.distkey,i.lblkkey,i.dblkkey,i.clufac,i.cols,i.analyzetime,i.samplesize,i.dataobj#,nvl(i.degree,1),nvl(i.instances,1),i.rowcnt,mod(i.pctthres$,256),i.indmethod#,i.trunccnt,nvl(c.unicols,0),nvl(c.deferrable#+c.valid#,0),nvl(i.spare1,i.intcols),i.spare4,i.spare2,i.spare6,decode(i.pctthres$,null,null,mod(trunc(i.pctthres$/256),256)),nvl(i.evaledition#,1),nvl(i.unusablebefore#,0),nvl(i.unusablebeginning#,0), ist.cachedblk,ist.cachehit,ist.logicalread from ind$ i, ind_stats$ ist, (select enabled, min(cols) unicols,min(to_number(bitand(defer,1))) deferrable#,min(to_number(bitand(defer,4))) valid# from cdef$ where obj#=:1 and enabled > 1 group by enabled) c where i.obj#=c.enabled(+) and i.obj# = ist.obj#(+) and i.bo#=:1 order by i.obj#
+END OF STMT
+EXEC #139644005891208:c=0,e=65,p=0,cr=0,cu=0,mis=0,r=0,dep=2,og=4,plh=2007068531,tim=2901289621
+WAIT #139644005891208: nam='gc current block 2-way' ela= 424 p1=9 p2=1384 p3=1 obj#=19 tim=2901290263
+FETCH #139644005891208:c=1000,e=676,p=0,cr=3,cu=0,mis=0,r=0,dep=2,og=4,plh=2007068531,tim=2901290349
+CLOSE #139644005891208:c=0,e=2,dep=2,type=3,tim=2901290392
+=====================
+PARSING IN CURSOR #139643919967704 len=418 dep=2 uid=0 oct=3 lid=0 tim=2901290482 hv=3759961951 ad='95a518c0' sqlid='14d7z6mh1sxuz'
+select name,intcol#,segcol#,type#,length,nvl(precision#,0),decode(type#,2,nvl(scale,-127/*MAXSB1MINAL*/),178,scale,179,scale,180,scale,181,scale,182,scale,183,scale,231,scale,0),null$,fixedstorage,nvl(deflength,0),default$,rowid,col#,property, nvl(charsetid,0),nvl(charsetform,0),spare1,spare2,nvl(spare3,0), nvl(evaledition#,1),nvl(unusablebefore#,0),nvl(unusablebeginning#,0) from col$ where obj#=:1 order by intcol#
+END OF STMT
+EXEC #139643919967704:c=0,e=55,p=0,cr=0,cu=0,mis=0,r=0,dep=2,og=4,plh=3765558045,tim=2901290480
+FETCH #139643919967704:c=0,e=51,p=0,cr=3,cu=0,mis=0,r=1,dep=2,og=4,plh=3765558045,tim=2901290580
+FETCH #139643919967704:c=0,e=7,p=0,cr=0,cu=0,mis=0,r=1,dep=2,og=4,plh=3765558045,tim=2901290618
+FETCH #139643919967704:c=0,e=6,p=0,cr=0,cu=0,mis=0,r=1,dep=2,og=4,plh=3765558045,tim=2901290645
+FETCH #139643919967704:c=0,e=5,p=0,cr=0,cu=0,mis=0,r=1,dep=2,og=4,plh=3765558045,tim=2901290671
+FETCH #139643919967704:c=0,e=5,p=0,cr=0,cu=0,mis=0,r=1,dep=2,og=4,plh=3765558045,tim=2901290697
+FETCH #139643919967704:c=0,e=6,p=0,cr=0,cu=0,mis=0,r=0,dep=2,og=4,plh=3765558045,tim=2901290724
+CLOSE #139643919967704:c=0,e=2,dep=2,type=3,tim=2901290749
+=====================
+PARSING IN CURSOR #139643918176992 len=76 dep=1 uid=0 oct=3 lid=0 tim=2901291364 hv=1052578227 ad='92bdcb38' sqlid='04kug40zbu4dm'
+select policy#, action# from aud_object_opt$ where object# = :1 and type = 2
+END OF STMT
+PARSE #139643918176992:c=2000,e=2222,p=0,cr=6,cu=0,mis=1,r=0,dep=1,og=4,plh=0,tim=2901291363
+WAIT #139643918176992: nam='row cache lock' ela= 964 cache id=16 mode=0 request=3 obj#=19 tim=2901293080
+=====================
+PARSING IN CURSOR #139643919202968 len=210 dep=2 uid=0 oct=3 lid=0 tim=2901293171 hv=864012087 ad='95a08550' sqlid='96g93hntrzjtr'
+select /*+ rule */ bucket_cnt, row_cnt, cache_cnt, null_cnt, timestamp#, sample_size, minimum, maximum, distcnt, lowval, hival, density, col#, spare1, spare2, avgcln from hist_head$ where obj#=:1 and intcol#=:2
+END OF STMT
+EXEC #139643919202968:c=0,e=33,p=0,cr=0,cu=0,mis=0,r=0,dep=2,og=3,plh=2239883476,tim=2901293169
+WAIT #139643919202968: nam='gc current block 2-way' ela= 585 p1=9 p2=18716 p3=1 obj#=70 tim=2901293913
+WAIT #139643919202968: nam='gc current block 2-way' ela= 353 p1=9 p2=609 p3=1 obj#=68 tim=2901294476
+FETCH #139643919202968:c=1000,e=1301,p=0,cr=3,cu=0,mis=0,r=1,dep=2,og=3,plh=2239883476,tim=2901294534
+CLOSE #139643919202968:c=0,e=9,dep=2,type=3,tim=2901294581
+WAIT #139643918176992: nam='row cache lock' ela= 523 cache id=16 mode=0 request=3 obj#=68 tim=2901295174
+EXEC #139643919202968:c=0,e=32,p=0,cr=0,cu=0,mis=0,r=0,dep=2,og=3,plh=2239883476,tim=2901295260
+FETCH #139643919202968:c=0,e=22,p=0,cr=3,cu=0,mis=0,r=1,dep=2,og=3,plh=2239883476,tim=2901295302
+CLOSE #139643919202968:c=0,e=5,dep=2,type=3,tim=2901295333
+WAIT #139643918176992: nam='row cache lock' ela= 379 cache id=16 mode=0 request=3 obj#=68 tim=2901295828
+EXEC #139643919202968:c=0,e=32,p=0,cr=0,cu=0,mis=0,r=0,dep=2,og=3,plh=2239883476,tim=2901295925
+FETCH #139643919202968:c=0,e=23,p=0,cr=3,cu=0,mis=0,r=1,dep=2,og=3,plh=2239883476,tim=2901295971
+CLOSE #139643919202968:c=1000,e=29,dep=2,type=3,tim=2901296028
+WAIT #139643918176992: nam='row cache lock' ela= 761 cache id=16 mode=0 request=3 obj#=68 tim=2901296889
+EXEC #139643919202968:c=0,e=53,p=0,cr=0,cu=0,mis=0,r=0,dep=2,og=3,plh=2239883476,tim=2901297021
+FETCH #139643919202968:c=0,e=161,p=0,cr=3,cu=0,mis=0,r=1,dep=2,og=3,plh=2239883476,tim=2901297206
+CLOSE #139643919202968:c=0,e=6,dep=2,type=3,tim=2901297251
+EXEC #139643918176992:c=2000,e=6331,p=0,cr=12,cu=0,mis=1,r=0,dep=1,og=4,plh=4006480256,tim=2901297800
+FETCH #139643918176992:c=0,e=57,p=0,cr=9,cu=0,mis=0,r=0,dep=1,og=4,plh=4006480256,tim=2901297900
+STAT #139643918176992 id=1 cnt=0 pid=0 pos=1 obj=448 op='TABLE ACCESS FULL AUD_OBJECT_OPT$ (cr=9 pr=0 pw=0 time=56 us cost=2 size=114 card=1)'
+CLOSE #139643918176992:c=0,e=6,dep=1,type=0,tim=2901297964
+EXEC #139644005891208:c=0,e=57,p=0,cr=0,cu=0,mis=0,r=0,dep=1,og=4,plh=2007068531,tim=2901298085
+FETCH #139644005891208:c=0,e=84,p=0,cr=3,cu=0,mis=0,r=0,dep=1,og=4,plh=2007068531,tim=2901298289
+CLOSE #139644005891208:c=0,e=2,dep=1,type=3,tim=2901298327
+EXEC #139643919967704:c=0,e=31,p=0,cr=0,cu=0,mis=0,r=0,dep=1,og=4,plh=3765558045,tim=2901298387
+FETCH #139643919967704:c=0,e=56,p=0,cr=3,cu=0,mis=0,r=1,dep=1,og=4,plh=3765558045,tim=2901298461
+FETCH #139643919967704:c=0,e=6,p=0,cr=0,cu=0,mis=0,r=1,dep=1,og=4,plh=3765558045,tim=2901298502
+FETCH #139643919967704:c=0,e=5,p=0,cr=0,cu=0,mis=0,r=1,dep=1,og=4,plh=3765558045,tim=2901298528
+FETCH #139643919967704:c=0,e=6,p=0,cr=0,cu=0,mis=0,r=0,dep=1,og=4,plh=3765558045,tim=2901298555
+CLOSE #139643919967704:c=0,e=1,dep=1,type=3,tim=2901298580
+=====================
+PARSING IN CURSOR #139643919448232 len=276 dep=1 uid=0 oct=3 lid=0 tim=2901298761 hv=412367524 ad='95987f08' sqlid='ct2g3h4c98fp4'
+select col#, grantee#, privilege#,max(mod(nvl(option$,0),2)), min(bitand(nvl(option$,0), 4) /4), max(bitand(nvl(option$,0), 8) /8), max(bitand(nvl(option$,0), 16) /16) from objauth$ where obj#=:1 and col# is not null group by privilege#, col#, grantee# order by col#, grantee#
+END OF STMT
+EXEC #139643919448232:c=0,e=32,p=0,cr=0,cu=0,mis=0,r=0,dep=1,og=4,plh=2968095032,tim=2901298760
+WAIT #139643919448232: nam='db file sequential read' ela= 11815 file#=9 block#=24486 blocks=1 obj#=62 tim=2901310686
+FETCH #139643919448232:c=1000,e=12028,p=1,cr=2,cu=0,mis=0,r=0,dep=1,og=4,plh=2968095032,tim=2901310836
+CLOSE #139643919448232:c=0,e=3,dep=1,type=3,tim=2901310898
+=====================
+PARSING IN CURSOR #139643919182752 len=258 dep=1 uid=0 oct=3 lid=0 tim=2901311033 hv=743590400 ad='9597ef90' sqlid='8uh6xphq54kh0'
+select grantee#,privilege#,nvl(col#,0),max(mod(nvl(option$,0),2)),min(bitand(nvl(option$,0), 4) /4), max(bitand(nvl(option$,0), 8) /8), max(bitand(nvl(option$,0), 16) /16) from objauth$ where obj#=:1 group by grantee#,privilege#,nvl(col#,0) order by grantee#
+END OF STMT
+EXEC #139643919182752:c=0,e=92,p=0,cr=0,cu=0,mis=0,r=0,dep=1,og=4,plh=2968095032,tim=2901311031
+FETCH #139643919182752:c=0,e=22,p=0,cr=2,cu=0,mis=0,r=0,dep=1,og=4,plh=2968095032,tim=2901311130
+CLOSE #139643919182752:c=0,e=2,dep=1,type=3,tim=2901311163
+=====================
+PARSING IN CURSOR #139643919909112 len=90 dep=1 uid=0 oct=3 lid=0 tim=2901311235 hv=3433193208 ad='9597b460' sqlid='cn6hhn36a4rrs'
+select con#,obj#,rcon#,enabled,nvl(defer,0),spare2,spare3,refact from cdef$ where robj#=:1
+END OF STMT
+EXEC #139643919909112:c=0,e=24,p=0,cr=0,cu=0,mis=0,r=0,dep=1,og=4,plh=3845132125,tim=2901311234
+FETCH #139643919909112:c=0,e=12,p=0,cr=2,cu=0,mis=0,r=0,dep=1,og=4,plh=3845132125,tim=2901311296
+CLOSE #139643919909112:c=0,e=2,dep=1,type=3,tim=2901311348
+=====================
+PARSING IN CURSOR #139643920159496 len=160 dep=1 uid=0 oct=3 lid=0 tim=2901311420 hv=2880999359 ad='95a15278' sqlid='gx4mv66pvj3xz'
+select con#,type#,condlength,intcols,robj#,rcon#,match#,refact,nvl(enabled,0),rowid,cols,nvl(defer,0),mtime,nvl(spare1,0),spare2,spare3 from cdef$ where obj#=:1
+END OF STMT
+EXEC #139643920159496:c=0,e=33,p=0,cr=0,cu=0,mis=0,r=0,dep=1,og=4,plh=2570921597,tim=2901311418
+FETCH #139643920159496:c=0,e=11,p=0,cr=2,cu=0,mis=0,r=0,dep=1,og=4,plh=2570921597,tim=2901311521
+CLOSE #139643920159496:c=0,e=3,dep=1,type=3,tim=2901311564
+WAIT #139644005886096: nam='library cache lock' ela= 808 handle address=2456490712 lock address=2481278016 100*mode+namespace=6815746 obj#=92481 tim=2901313185
+WAIT #139644005886096: nam='library cache pin' ela= 556 handle address=2456490712 pin address=2511292112 100*mode+namespace=6815746 obj#=92481 tim=2901313851
+=====================
+PARSING IN CURSOR #139643920128784 len=78 dep=1 uid=0 oct=3 lid=0 tim=2901313974 hv=2098305989 ad='93c17fb0' sqlid='cusp9gtyj36y5'
+select /*+ index(do) */ dir_cnt from opt_directive_own$ do where dir_own# = :1
+END OF STMT
+EXEC #139643920128784:c=0,e=30,p=0,cr=0,cu=0,mis=0,r=0,dep=1,og=4,plh=3646447030,tim=2901313972
+FETCH #139643920128784:c=0,e=9,p=0,cr=1,cu=0,mis=0,r=0,dep=1,og=4,plh=3646447030,tim=2901314071
+CLOSE #139643920128784:c=0,e=2,dep=1,type=3,tim=2901314103
+WAIT #139644005886096: nam='db file sequential read' ela= 752 file#=11 block#=162 blocks=1 obj#=92481 tim=2901315062
+EXEC #139643919960920:c=0,e=31,p=0,cr=0,cu=0,mis=0,r=0,dep=2,og=4,plh=1072382624,tim=2901316642
+FETCH #139643919960920:c=0,e=17,p=0,cr=2,cu=0,mis=0,r=0,dep=2,og=4,plh=1072382624,tim=2901316695
+CLOSE #139643919960920:c=0,e=2,dep=2,type=3,tim=2901316726
+=====================
+PARSING IN CURSOR #139643919241752 len=359 dep=1 uid=0 oct=3 lid=0 tim=2901316814 hv=1208040685 ad='92aa3198' sqlid='48ptmcx402g7d'
+SELECT /* OPT_DYN_SAMP */ /*+ ALL_ROWS IGNORE_WHERE_CLAUSE NO_PARALLEL(SAMPLESUB) opt_param('parallel_execution_enabled', 'false') NO_PARALLEL_INDEX(SAMPLESUB) NO_SQL_TUNE */ NVL(SUM(C1),0), NVL(SUM(C2),0) FROM (SELECT /*+ NO_PARALLEL("SALGRADE") FULL("SALGRADE") NO_PARALLEL_INDEX("SALGRADE") */ 1 AS C1, 1 AS C2 FROM "SCOTT"."SALGRADE" "SALGRADE") SAMPLESUB
+END OF STMT
+PARSE #139643919241752:c=1000,e=1655,p=0,cr=2,cu=0,mis=1,r=0,dep=1,og=1,plh=1162415486,tim=2901316813
+EXEC #139643919241752:c=0,e=36,p=0,cr=0,cu=0,mis=0,r=0,dep=1,og=1,plh=1162415486,tim=2901316904
+WAIT #139643919241752: nam='db file scattered read' ela= 777 file#=11 block#=163 blocks=5 obj#=92481 tim=2901317884
+FETCH #139643919241752:c=0,e=1087,p=5,cr=7,cu=0,mis=0,r=1,dep=1,og=1,plh=1162415486,tim=2901318056
+STAT #139643919241752 id=1 cnt=1 pid=0 pos=1 obj=0 op='SORT AGGREGATE (cr=7 pr=5 pw=0 time=1087 us)'
+STAT #139643919241752 id=2 cnt=5 pid=1 pos=1 obj=92481 op='TABLE ACCESS FULL SALGRADE (cr=7 pr=5 pw=0 time=1070 us cost=3 size=0 card=409)'
+CLOSE #139643919241752:c=0,e=6,dep=1,type=0,tim=2901318162
+WAIT #139644005886096: nam='row cache lock' ela= 1173 cache id=16 mode=0 request=3 obj#=92481 tim=2901319407
+EXEC #139643919202968:c=0,e=35,p=0,cr=0,cu=0,mis=0,r=0,dep=1,og=3,plh=2239883476,tim=2901319519
+
+*** 2015-05-15 10:56:27.174
+WAIT #139643919202968: nam='db file sequential read' ela= 7298 file#=9 block#=32208 blocks=1 obj#=70 tim=2901326917
+FETCH #139643919202968:c=1000,e=7590,p=1,cr=2,cu=0,mis=0,r=0,dep=1,og=3,plh=2239883476,tim=2901327146
+CLOSE #139643919202968:c=0,e=3,dep=1,type=3,tim=2901327207
+WAIT #139644005886096: nam='row cache lock' ela= 1050 cache id=16 mode=0 request=3 obj#=92481 tim=2901328325
+EXEC #139643919202968:c=0,e=282,p=0,cr=0,cu=0,mis=0,r=0,dep=1,og=3,plh=2239883476,tim=2901328839
+FETCH #139643919202968:c=0,e=37,p=0,cr=2,cu=0,mis=0,r=0,dep=1,og=3,plh=2239883476,tim=2901328949
+CLOSE #139643919202968:c=0,e=6,dep=1,type=3,tim=2901329078
+WAIT #139644005886096: nam='row cache lock' ela= 920 cache id=16 mode=0 request=3 obj#=92481 tim=2901330103
+EXEC #139643919202968:c=0,e=26,p=0,cr=0,cu=0,mis=0,r=0,dep=1,og=3,plh=2239883476,tim=2901330218
+FETCH #139643919202968:c=0,e=12,p=0,cr=2,cu=0,mis=0,r=0,dep=1,og=3,plh=2239883476,tim=2901330252
+CLOSE #139643919202968:c=0,e=5,dep=1,type=3,tim=2901330375
+=====================
+PARSING IN CURSOR #139644005886096 len=28 dep=0 uid=0 oct=3 lid=0 tim=2901332002 hv=857008581 ad='93e61e68' sqlid='c9znpgntj9uf5'
+select * from scott.salgrade
+END OF STMT
+PARSE #139644005886096:c=21000,e=79793,p=10,cr=73,cu=0,mis=1,r=0,dep=0,og=1,plh=2489195056,tim=2901332000
+WAIT #139644005886096: nam='Disk file operations I/O' ela= 34 FileOperation=8 fileno=0 filetype=8 obj#=92481 tim=2901332255
+EXEC #139644005886096:c=0,e=37,p=0,cr=0,cu=0,mis=0,r=0,dep=0,og=1,plh=2489195056,tim=2901332314
+WAIT #139644005886096: nam='SQL*Net message to client' ela= 3 driver id=1650815232 #bytes=1 p3=0 obj#=92481 tim=2901332389
+FETCH #139644005886096:c=0,e=96,p=0,cr=4,cu=0,mis=0,r=1,dep=0,og=1,plh=2489195056,tim=2901332614
+WAIT #139644005886096: nam='SQL*Net message from client' ela= 1012 driver id=1650815232 #bytes=1 p3=0 obj#=92481 tim=2901333717
+WAIT #139644005886096: nam='SQL*Net message to client' ela= 1 driver id=1650815232 #bytes=1 p3=0 obj#=92481 tim=2901333805
+FETCH #139644005886096:c=0,e=64,p=0,cr=4,cu=0,mis=0,r=4,dep=0,og=1,plh=2489195056,tim=2901333858
+STAT #139644005886096 id=1 cnt=5 pid=0 pos=1 obj=92481 op='TABLE ACCESS FULL SALGRADE (cr=8 pr=0 pw=0 time=78 us cost=3 size=195 card=5)'
+
+*** 2015-05-15 10:56:43.822
+WAIT #139644005886096: nam='SQL*Net message from client' ela= 16640705 driver id=1650815232 #bytes=1 p3=0 obj#=92481 tim=2917974869
+CLOSE #139644005886096:c=0,e=25,dep=0,type=0,tim=2917975098
+=====================
+PARSING IN CURSOR #139644005886096 len=48 dep=0 uid=0 oct=47 lid=0 tim=2917980792 hv=3585424577 ad='93609cc8' sqlid='fypj2tgavag61'
+BEGIN dbms_monitor.session_trace_disable; END;
+END OF STMT
+PARSE #139644005886096:c=3000,e=5577,p=0,cr=0,cu=0,mis=1,r=0,dep=0,og=1,plh=0,tim=2917980790
+WAIT #139644005886096: nam='Disk file operations I/O' ela= 54 FileOperation=8 fileno=0 filetype=8 obj#=92481 tim=2917980990
+EXEC #139644005886096:c=1000,e=3032,p=0,cr=0,cu=0,mis=0,r=1,dep=0,og=1,plh=0,tim=2917984096
