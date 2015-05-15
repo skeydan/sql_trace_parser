@@ -8,12 +8,13 @@ import           Data.Attoparsec.ByteString.Char8
 import qualified Data.ByteString                  as B
 import qualified Data.Map                         as M
 
-tracefile = "example.trc"
+tracefile = "CDB11_ora_27190.trc"
 
 main :: IO ()
 main = do
     file <- B.readFile tracefile
-    let parsed = parseOnly parseLines file
+    
+    let parsed = parseOnly parseTrace file
     case parsed of
         Left str -> putStrLn "couldn't parse file"
         Right a -> print $ groupBySqlId a
@@ -49,6 +50,8 @@ data CMaps = CMaps {
   sqlIdsMap  :: M.Map SqlId [Line],
   cursorsMap :: M.Map CurNum [Line]
   } deriving (Show)
+
+parseTrace :: Parser
 
 parseLines :: Parser [Line]
 parseLines = many $ parseLine <* endOfLine 
