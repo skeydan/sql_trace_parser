@@ -4,6 +4,7 @@
 module Main where
 
 import           Control.Applicative
+import           Control.Monad
 import           Data.Attoparsec.ByteString.Char8
 import qualified Data.ByteString                  as B
 import qualified Data.Map                         as M
@@ -51,10 +52,12 @@ data CMaps = CMaps {
   } deriving (Show)
 
 parseLines :: Parser [Line]
-parseLines = liftM ( filter (\l -> case l of 
-                             EmptyLine -> False
-                             _         -> True))
-                    many1 $ (parseLine <* endOfLine) <|> skipLine
+parseLines = do 
+    all <- many1 $ (parseLine <* endOfLine) <|> skipLine
+    return $ (filter (\l -> case l of 
+                              EmptyLine -> False
+                              _         -> True))
+             all
 
 skipLine :: Parser Line
 skipLine = do 

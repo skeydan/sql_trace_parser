@@ -83,19 +83,9 @@ STAT #139643919992368 id=1 cnt=1 pid=0 pos=1 obj=18 op='TABLE ACCESS BY INDEX RO
 STAT #139643919992368 id=2 cnt=1 pid=1 pos=1 obj=37 op='INDEX RANGE SCAN I_OBJ2 (cr=3 pr=0 pw=0 time=1197 us cost=3 size=0 card=1)'
 CLOSE #139643919992368:c=0,e=93,dep=1,type=3,tim=2901260882
 WAIT #139644005886096: nam='library cache pin' ela= 772 handle address=2509875608 pin address=2479378048 100*mode+namespace=397202870566914 obj#=92478 tim=2901261904
-=====================
-PARSING IN CURSOR #139644005797984 len=484 dep=1 uid=0 oct=3 lid=0 tim=2901262181 hv=3039452944 ad='959eb710' sqlid='7fwum1yuknrsh'
-select t.ts#,t.file#,t.block#,nvl(t.bobj#,0),nvl(t.tab#,0),t.intcols,nvl(t.clucols,0),t.flags,t.pctfree$,t.pctused$,t.initrans,t.maxtrans,t.rowcnt,t.blkcnt,t.empcnt,t.avgspc,t.chncnt,t.avgrln,t.analyzetime,t.samplesize,t.cols,t.property,nvl(t.degree,1),nvl(t.instances,1),t.avgspc_flb,t.flbcnt,t.kernelcols,nvl(t.trigflag, 0),nvl(t.spare1,0),nvl(t.spare2,0),t.spare4,t.spare6,ts.cachedblk,ts.cachehit,ts.logicalread from tab$ t, tab_stats$ ts where t.obj#= :1 and t.obj# = ts.obj# (+)
-END OF STMT
-EXEC #139644005797984:c=0,e=54,p=0,cr=0,cu=0,mis=0,r=0,dep=1,og=4,plh=2035254952,tim=2901262180
-WAIT #139644005797984: nam='gc current block 2-way' ela= 374 p1=9 p2=23740 p3=1 obj#=3 tim=2901262757
-WAIT #139644005797984: nam='db file sequential read' ela= 18942 file#=9 block#=30448 blocks=1 obj#=4 tim=2901281866
-FETCH #139644005797984:c=0,e=19758,p=1,cr=4,cu=0,mis=0,r=1,dep=1,og=4,plh=2035254952,tim=2901282024
-CLOSE #139644005797984:c=0,e=10,dep=1,type=3,tim=2901282084
-WAIT #139644005886096: nam='row cache lock' ela= 780 cache id=2 mode=0 request=3 obj#=92478 tim=2901282939
-=====================
 PARSING IN CURSOR #139643920110984 len=226 dep=1 uid=0 oct=3 lid=0 tim=2901283067 hv=1011610568 ad='95a4d8e0' sqlid='9tgj4g8y4rwy8'
-select type#,blocks,extents,minexts,maxexts,extsize,extpct,user#,iniexts,NVL(lists,65535),NVL(groups,65535),cachehint,hwmincr, NVL(spare1,0),NVL(scanhint,0),NVL(bitmapranges,0) from seg$ where ts#=:1 and file#=:2 and block#=:3
+select type#,blocks,extents,minexts,maxexts,extsize,extpct,user#,iniexts,NVL(lists,65535),NVL(groups,65535),cachehint,hwmincr, NVL(spare1,0),NVL(scanhint,0),NVL(bitmaprang
+es,0) from seg$ where ts#=:1 and file#=:2 and block#=:3
 END OF STMT
 EXEC #139643920110984:c=0,e=66,p=0,cr=0,cu=0,mis=0,r=0,dep=1,og=4,plh=3755742892,tim=2901283066
 FETCH #139643920110984:c=0,e=27,p=0,cr=3,cu=0,mis=0,r=1,dep=1,og=4,plh=3755742892,tim=2901283161

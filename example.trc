@@ -10,3 +10,8 @@ xxxxxxxxxxxxxxxxxxxxxx
 END OF STMT
 PARSE #140611565469136:c=0,e=0,p=0,cr=0,cu=0,mis=0,r=0,dep=0,og=1,plh=0,tim=0
 EXEC #140611565469136:c=0,e=0,p=0,cr=0,cu=0,mis=0,r=0,dep=0,og=1,plh=0,tim=0
+(filter (\l -> case l of 
+                             EmptyLine -> False
+                             _         -> True)
+             )
+             many1 $ (parseLine <* endOfLine) <|> skipLine
