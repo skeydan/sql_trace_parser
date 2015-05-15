@@ -13,12 +13,11 @@ tracefile = "CDB11_ora_27190.trc"
 main :: IO ()
 main = do
     file <- B.readFile tracefile
-    
-    let parsed = parseOnly parseTrace file
-    case parsed of
+    let parsed = parseOnly parseLines file
+    case parsed of 
         Left str -> putStrLn "couldn't parse file"
-        Right a -> print $ groupBySqlId a
-        --Right a -> print a
+        --Right a -> print $ groupBySqlId a
+        Right lns -> print lns
 
 groupBySqlId :: [Line] -> CMaps
 groupBySqlId lns = do
@@ -51,13 +50,19 @@ data CMaps = CMaps {
   cursorsMap :: M.Map CurNum [Line]
   } deriving (Show)
 
-parseTrace :: Parser
-
 parseLines :: Parser [Line]
-parseLines = many $ parseLine <* endOfLine 
+parseLines = liftM ( filter (\l -> case l of 
+                             EmptyLine -> False
+                             _         -> True))
+                    many1 $ (parseLine <* endOfLine) <|> skipLine
+
+skipLine :: Parser Line
+skipLine = do 
+    skipWhile (/= '\n') >> endOfLine 
+    return EmptyLine
 
 parseLine :: Parser Line
-parseLine =  parseCursor <|> parseCall  <|> parseWait <|> parseClose <|> parseStat
+parseLine =  parseCursor <|> parseCall  <|> parseWait <|> parseClose <|> parseStat <|> skipLine
 
 parseCursor :: Parser Line
 parseCursor = Cursor <$> (string "PARSING IN CURSOR #" *> (read <$> many1 digit) <* string " len=")
@@ -208,7 +213,10 @@ data Line =
         pos        :: Int,
         statObj    :: Int,
         op         :: String
-        } deriving (Show)
+        } 
+      | 
+    EmptyLine
+      deriving (Show)
 
 
 data CloseType = HardClose | SoftCloseEmptySlot | SoftCloseReplaceOther | SoftClosePutBack deriving (Show)
