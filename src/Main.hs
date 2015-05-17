@@ -17,8 +17,8 @@ main = do
     let parsed = parseOnly parseLines file
     case parsed of 
         Left str -> putStrLn "couldn't parse file"
-        --Right a -> print $ groupBySqlId a
-        Right lns -> print lns
+        Right a -> print $ groupBySqlId a
+        --Right lns -> print lns
 
 groupBySqlId :: [Line] -> CMaps
 groupBySqlId lns = do
@@ -49,8 +49,17 @@ type CurNum = Int
 data CMaps = CMaps {
   sqlIdsMap  :: M.Map SqlId [Line],
   cursorsMap :: M.Map CurNum [Line]
-  } deriving (Show)
+  } 
 
+instance Show CMaps where
+    show (CMaps smap cmap) = 
+      let slist = M.toList smap
+          clist = M.toList cmap 
+      in "Cursors by sql_id:\n\n" ++ concatMap showSqlId slist ++ "\n\nCursors by cursor number:\n\n" ++ concatMap showCursor clist
+      where showSqlId = \(s,lns) -> s ++ ":\n" ++ concatMap showLine lns ++ "\n"
+            showCursor = \(c,lns) -> show c ++ ":\n" ++ concatMap showLine lns ++ "\n"
+            showLine = \l -> show l ++ "\n"
+  
 parseLines :: Parser [Line]
 parseLines = do 
     all <- many1 $ (parseLine <* endOfLine) <|> skipLine
