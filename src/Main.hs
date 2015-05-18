@@ -56,8 +56,8 @@ instance Show CMaps where
       let slist = M.toList smap
           clist = M.toList cmap 
       in "Cursors by sql_id:\n\n" ++ concatMap showSqlId slist ++ "\n\nCursors by cursor number:\n\n" ++ concatMap showCursor clist
-      where showSqlId = \(s,lns) -> s ++ ":\n" ++ reverse (concatMap showLine lns) ++ "\n"
-            showCursor = \(c,lns) -> show c ++ ":\n" ++ reverse (concatMap showLine lns) ++ "\n"
+      where showSqlId = \(s,lns) -> s ++ ":\n" ++ concatMap showLine (reverse lns) ++ "\n"
+            showCursor = \(c,lns) -> show c ++ ":\n" ++ concatMap showLine (reverse lns) ++ "\n"
             showLine = \l -> show l ++ "\n"
   
 parseLines :: Parser [Line]
