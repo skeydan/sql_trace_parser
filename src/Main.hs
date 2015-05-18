@@ -17,8 +17,17 @@ main = do
     let parsed = parseOnly parseLines file
     case parsed of 
         Left str -> putStrLn "couldn't parse file"
-        Right a -> print $ groupBySqlId a
-        --Right lns -> print lns
+        Right a -> do let grouped = groupBySqlId a
+                      print grouped
+
+statementStats :: CMaps -> StatementMap
+statementStats = undefined
+
+newtype StatementMap = M.Map SqlId StatsMap
+
+newtype StatsMap = M.Map Category Int
+
+data Category = TBD
 
 groupBySqlId :: [Line] -> CMaps
 groupBySqlId lns = do
