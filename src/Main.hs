@@ -15,19 +15,39 @@ main :: IO ()
 main = do
     file <- B.readFile tracefile
     let parsed = parseOnly parseLines file
-    case parsed of 
+    case parsed of
         Left str -> putStrLn "couldn't parse file"
-        Right a -> do let grouped = groupBySqlId a
-                      print grouped
+        Right a -> do let stats = statementStats (sqlIdsMap (groupBySqlId a))
+                      print stats
 
-statementStats :: CMaps -> StatementMap
-statementStats = undefined
+statementStats :: M.Map SqlId [Line] -> StatementStats
+statementStats cmaps = undefined
 
-newtype StatementMap = M.Map SqlId StatsMap
 
-newtype StatsMap = M.Map Category Int
+type StatementStats = M.Map SqlId StatsMap
 
-data Category = TBD
+data StatsMap = StatsMap {
+  parseStats :: CallStats,
+  execStats  :: CallStats,
+  fetchStats :: CallStats,
+  waitStats  :: WaitStats
+} deriving (Show)
+
+data CallStats = CallStats {
+  count   :: Int,
+  cpu     :: Int,
+  elapsed :: Int,
+  disk    :: Int,
+  current :: Int,
+  query   :: Int,
+  rows    :: Int
+} deriving (Show)
+
+data WaitStats = WaitStats {
+  timesWaited :: Int,
+  maxWait     :: Int,
+  totalWaited :: Int
+} deriving (Show)
 
 groupBySqlId :: [Line] -> CMaps
 groupBySqlId lns = do
@@ -38,9 +58,9 @@ groupBySqlId lns = do
                     _ -> let mySqlId = sqlId (head (filter isCursor (M.findWithDefault undefined (curNum l) (cursorsMap m)))) in
                            CMaps { sqlIdsMap = M.insertWith (++)  mySqlId [l] (sqlIdsMap m),
                                    cursorsMap = M.insertWith (++) (curNum l) [l] (cursorsMap m) })
-          start  
+          start
           lns
-          
+
 isCursor :: Line -> Bool
 isCursor (Cursor _ _ _ _ _ _ _ _ _ _ _) = True
 isCursor _ = False
@@ -58,28 +78,28 @@ type CurNum = Int
 data CMaps = CMaps {
   sqlIdsMap  :: M.Map SqlId [Line],
   cursorsMap :: M.Map CurNum [Line]
-  } 
+  }
 
 instance Show CMaps where
-    show (CMaps smap cmap) = 
+    show (CMaps smap cmap) =
       let slist = M.toList smap
-          clist = M.toList cmap 
+          clist = M.toList cmap
       in "Cursors by sql_id:\n\n" ++ concatMap showSqlId slist ++ "\n\nCursors by cursor number:\n\n" ++ concatMap showCursor clist
       where showSqlId = \(s,lns) -> s ++ ":\n" ++ concatMap showLine (reverse lns) ++ "\n"
             showCursor = \(c,lns) -> show c ++ ":\n" ++ concatMap showLine (reverse lns) ++ "\n"
             showLine = \l -> show l ++ "\n"
-  
+
 parseLines :: Parser [Line]
-parseLines = do 
+parseLines = do
     all <- many1 $ (parseLine <* endOfLine) <|> skipLine
-    return $ (filter (\l -> case l of 
+    return $ (filter (\l -> case l of
                               EmptyLine -> False
                               _         -> True))
              all
 
 skipLine :: Parser Line
-skipLine = do 
-    skipWhile (/= '\n') >> endOfLine 
+skipLine = do
+    skipWhile (/= '\n') >> endOfLine
     return EmptyLine
 
 parseLine :: Parser Line
@@ -203,7 +223,7 @@ data Line =
         hash_value      :: Int,
         address         :: String,
         sqlId           :: String,
-        sqlText        :: String
+        sqlText         :: String
     } |
     Wait {
         waitCurNum  :: Int,
@@ -234,8 +254,8 @@ data Line =
         pos        :: Int,
         statObj    :: Int,
         op         :: String
-        } 
-      | 
+        }
+      |
     EmptyLine
       deriving (Show)
 
