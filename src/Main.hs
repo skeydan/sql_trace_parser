@@ -17,12 +17,23 @@ main = do
     let parsed = parseOnly parseLines file
     case parsed of
         Left str -> putStrLn "couldn't parse file"
-        Right a -> do let stats = statementStats (sqlIdsMap (groupBySqlId a))
+        Right a -> do let stats = M.map statementStats (sqlIdsMap (groupBySqlId a))
                       print stats
 
-statementStats :: M.Map SqlId [Line] -> StatementStats
-statementStats cmaps = undefined
+statementStats :: [Line] -> StatsMap
+statementStats lns = foldr
+                       (\l sm -> updateStats l sm)
+                       M.empty
+                       lns
 
+updateStats :: Line -> StatsMap -> StatsMap
+updateStats l sm = sm
+{-
+updateStats l = case l of
+    Call ctype _ cpu ela physrd consrd currd mis nrows _ _ _ _  ->
+    Wait _ event ela _ _ _ _ _ _ _ _  -> 
+
+-}
 
 type StatementStats = M.Map SqlId StatsMap
 
