@@ -21,18 +21,39 @@ main = do
                       print stats
 
 statementStats :: [Line] -> StatsMap
-statementStats lns = foldr
-                       (\l sm -> updateStats l sm)
-                       M.empty
-                       lns
+statementStats lns = 
+  let start = StatsMap (CallStats 0 0 0 0 0 0 0) (CallStats 0 0 0 0 0 0 0) (CallStats 0 0 0 0 0 0 0) (WaitStats 0 0 0) in
+      foldr (\l sm -> updateStats l sm) start lns
 
 updateStats :: Line -> StatsMap -> StatsMap
-updateStats l sm = sm
-{-
-updateStats l = case l of
-    Call ctype _ cpu ela physrd consrd currd mis nrows _ _ _ _  ->
-    Wait _ event ela _ _ _ _ _ _ _ _  -> 
+updateStats l sm = case l of
+    Call ctype _ cpu ela physrd consrd currd mis nrows _ _ _ _  -> case ctype of
+        Parse -> updateForCallType sm Parse cpu ela physrd consrd currd mis nrows
+        Exec -> updateForCallType sm Exec cpu ela physrd consrd currd mis nrows
+        Fetch -> updateForCallType sm Fetch cpu ela physrd consrd currd mis nrows 
+        _ -> sm
+    Wait _ event ela _ _ _ _ _ _ _ _  -> updateWaitTime sm event ela
+    _ -> sm
 
+updateWaitTime :: StatsMap -> String -> Int -> StatsMap
+updateWaitTime sm event ela = undefined
+
+updateForCallType :: StatsMap -> CallType -> Int -> Int -> Int -> Int -> Int -> Int -> Int -> StatsMap
+updateForCallType sm ctype newcpu newela physrd consrd currd mis nrows = undefined
+
+{-updateForCallType sm ctype newcpu newela physrd consrd currd mis nrows = 
+  StatsMap {parseStats = case ctype of 
+      Parse -> Callstats {count = count (parseStats sm) + 1,
+                          cpu = cpu (parseStats sm) + ,
+                                           elapsed = elapsed (parseStats sm),
+                                           disk = disk (parseStats sm),
+                                           current = current (parseStats sm),
+                                           query = query (parseStats sm),
+                                           rows = rows (parseStats sm)},
+                                           disk = disk (parseStats sm),
+                                           current = current (parseStats sm),
+                                           query = query (parseStats sm),
+                                           rows = rows (parseStats sm)},
 -}
 
 type StatementStats = M.Map SqlId StatsMap
