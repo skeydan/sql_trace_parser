@@ -17,12 +17,17 @@ main = do
     let parsed = parseOnly parseLines file
     case parsed of
         Left str -> putStrLn "couldn't parse file"
-        Right a -> do let stats = M.map statementStats (sqlIdsMap (groupBySqlId a))
-                      print stats
+        Right a -> do
+            let allBySqlId = sqlIdsMap (groupBySqlId a)
+                stats = M.map statementStats allBySqlId
+              in print $ formatStats stats allBySqlId
+
+formatStats :: M.Map SqlId StatsMap -> M.Map SqlId [Line] -> String
+formatStats = undefined
 
 statementStats :: [Line] -> StatsMap
-statementStats lns = 
-  let start = StatsMap (CallStats 0 0 0 0 0 0 0) (CallStats 0 0 0 0 0 0 0) (CallStats 0 0 0 0 0 0 0) (WaitStats 0 0 0) in
+statementStats lns =
+  let start = StatsMap (CallStats 0 0 0 0 0 0 0 0) (CallStats 0 0 0 0 0 0 0 0) (CallStats 0 0 0 0 0 0 0 0) (WaitStats 0 0 0) in
       foldr (\l sm -> updateStats l sm) start lns
 
 updateStats :: Line -> StatsMap -> StatsMap
@@ -30,33 +35,53 @@ updateStats l sm = case l of
     Call ctype _ cpu ela physrd consrd currd mis nrows _ _ _ _  -> case ctype of
         Parse -> updateForCallType sm Parse cpu ela physrd consrd currd mis nrows
         Exec -> updateForCallType sm Exec cpu ela physrd consrd currd mis nrows
-        Fetch -> updateForCallType sm Fetch cpu ela physrd consrd currd mis nrows 
+        Fetch -> updateForCallType sm Fetch cpu ela physrd consrd currd mis nrows
         _ -> sm
     Wait _ event ela _ _ _ _ _ _ _ _  -> updateWaitTime sm event ela
     _ -> sm
 
 updateWaitTime :: StatsMap -> String -> Int -> StatsMap
-updateWaitTime sm event ela = undefined
+updateWaitTime sm event ela =
+  StatsMap { parseStats = parseStats sm,
+             execStats = execStats sm,
+             fetchStats = fetchStats sm,
+             waitStats = WaitStats {timesWaited = timesWaited (waitStats sm) + 1,
+                                    maxWait = maxWait (waitStats sm) + 1,
+                                    totalWaited = totalWaited (waitStats sm) + 1 }}
 
 updateForCallType :: StatsMap -> CallType -> Int -> Int -> Int -> Int -> Int -> Int -> Int -> StatsMap
-updateForCallType sm ctype newcpu newela physrd consrd currd mis nrows = undefined
-
-{-updateForCallType sm ctype newcpu newela physrd consrd currd mis nrows = 
-  StatsMap {parseStats = case ctype of 
-      Parse -> Callstats {count = count (parseStats sm) + 1,
-                          cpu = cpu (parseStats sm) + ,
-                                           elapsed = elapsed (parseStats sm),
-                                           disk = disk (parseStats sm),
-                                           current = current (parseStats sm),
-                                           query = query (parseStats sm),
-                                           rows = rows (parseStats sm)},
-                                           disk = disk (parseStats sm),
-                                           current = current (parseStats sm),
-                                           query = query (parseStats sm),
-                                           rows = rows (parseStats sm)},
--}
-
-type StatementStats = M.Map SqlId StatsMap
+updateForCallType sm ctype newcpu newela physrd consrd currd newmis newrows =
+  StatsMap {parseStats = case ctype of
+      Parse -> CallStats {calls = calls (parseStats sm) + 1,
+                          cpu = cpu (parseStats sm) + newcpu,
+                          elapsed = elapsed (parseStats sm) + newela,
+                          disk = disk (parseStats sm) + physrd,
+                          current = current (parseStats sm) + currd,
+                          query = query (parseStats sm) + consrd,
+                          rows = rows (parseStats sm) + newrows,
+                          mis = mis (parseStats sm) + newmis }
+      _ -> parseStats sm,
+      execStats = case ctype of
+      Exec -> CallStats {calls = calls (execStats sm) + 1,
+                          cpu = cpu (execStats sm) + newcpu,
+                          elapsed = elapsed (execStats sm) + newela,
+                          disk = disk (execStats sm) + physrd,
+                          current = current (execStats sm) + currd,
+                          query = query (execStats sm) + consrd,
+                          rows = rows (execStats sm) + newrows,
+                          mis = mis (execStats sm) + newmis }
+      _ -> execStats sm,
+      fetchStats = case ctype of
+      Parse -> CallStats {calls = calls (fetchStats sm) + 1,
+                          cpu = cpu (fetchStats sm) + newcpu,
+                          elapsed = elapsed (fetchStats sm) + newela,
+                          disk = disk (fetchStats sm) + physrd,
+                          current = current (fetchStats sm) + currd,
+                          query = query (fetchStats sm) + consrd,
+                          rows = rows (fetchStats sm) + newrows,
+                          mis = mis (fetchStats sm) + newmis }
+      _ -> fetchStats sm,
+      waitStats = waitStats sm}
 
 data StatsMap = StatsMap {
   parseStats :: CallStats,
@@ -66,13 +91,14 @@ data StatsMap = StatsMap {
 } deriving (Show)
 
 data CallStats = CallStats {
-  count   :: Int,
+  calls   :: Int,
   cpu     :: Int,
   elapsed :: Int,
   disk    :: Int,
   current :: Int,
   query   :: Int,
-  rows    :: Int
+  rows    :: Int,
+  mis     :: Int
 } deriving (Show)
 
 data WaitStats = WaitStats {
